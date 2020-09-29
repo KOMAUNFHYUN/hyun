@@ -18,6 +18,8 @@ package egovframework.example.sample.web;
 import java.util.List;
 
 import egovframework.example.sample.service.EgovSampleService;
+import egovframework.example.sample.service.BoardDefaultVO;
+import egovframework.example.sample.service.BoardService;
 import egovframework.example.sample.service.SampleDefaultVO;
 import egovframework.example.sample.service.SampleVO;
 
@@ -68,6 +70,11 @@ public class EgovSampleController {
 	/** Validator */
 	@Resource(name = "beanValidator")
 	protected DefaultBeanValidator beanValidator;
+	
+	/** BoardService */
+	@Resource(name = "boardService")
+	private BoardService BoardService;
+	
 
 	/**
 	 * 글 목록을 조회한다. (pageing)
@@ -237,7 +244,7 @@ public class EgovSampleController {
 	 */
 	@RequestMapping(value = "/Register.do")
 	public String Register(@ModelAttribute("searchVO") SampleDefaultVO searchVO, ModelMap model) throws Exception {
-
+		
 		return "egov/Register";
 	}
 	
@@ -255,4 +262,20 @@ public class EgovSampleController {
 		return "egov/Login";
 	}
 	
+	/**
+	 * 게시판을 출력한다.
+	 * @param sampleVO - 등록할 정보가 담긴 VO
+	 * @param searchVO - 목록 조회조건 정보가 담긴 VO
+	 * @param status
+	 * @return "forward:/egovSampleList.do"
+	 * @exception Exception
+	 */
+	@RequestMapping(value = "/Board.do")
+	public String Board(@ModelAttribute("searchVO") BoardDefaultVO searchVO, ModelMap model) throws Exception {
+
+		List<?> BoardList = BoardService.selectBoardList(searchVO);
+		model.addAttribute("resultList", BoardList);
+		
+		return "egov/Board";
+	}
 }
